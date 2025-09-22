@@ -6,6 +6,19 @@
 
 Pour lancer ->
 
+Possibilité de créé un dossier **initminio** et le structurer comme ca :
+
+```
+initminio/
+├─ audio/
+├─ images/
+└─ javascript/
+```
+
+et a l'interieur mettre les fichier de base. Ne pas oubliez de les mettre dans le **initdb/schema.sql**
+
+
+
 ```bash
 docker compose up --build 
 ```
@@ -56,10 +69,10 @@ Postgres : localhost:5432
 
 * **Backend** : NestJS (excellente idée, structure modulaire, DI, bon pour Clean Architecture)
 * **Frontend** : React + xterm.js (pour terminal web) + UI simple
-* **DB** : **Postgres recommandé** pour ce besoin (schéma simple, recherches, transactions, contraintes). *Mongo* marche aussi si tu préfères documents, mais Postgres te donne plus de garanties (ACID) et facilite joigning/historique. Je fournis les deux modèles.
+* **DB** : **Postgres** pour ce besoin (schéma simple, recherches, transactions, contraintes). *Mongo* marche aussi si tu préfères documents, mais Postgres te donne plus de garanties (ACID) et facilite joigning/historique. Je fournis les deux modèles.
 * **SSH & SFTP** : `ssh2` (Node) pour SSH/SFTP/SCP proxy
 * **Terminal browser** : `xterm.js` + WebSocket (backend : proxy entre WebSocket et un client `ssh2` pty)
-* **Agent optionnel** : petit agent Node/Python sur chaque machine (recommandé pour GUI actions) qui peut exposer une API locale et/ou s'inscrire auprès du serveur central.
+* **Stockage des fichier** : **Minio** stockage des fichiers audio images et script pour premiere année
 
 ---
 
@@ -104,18 +117,38 @@ Agents (optionnel, sur chaque machine)
 
 ## Schéma de la base de données
 
-### Option Postgres (recommandée)
+### Postgres
 
 ```sql
 CREATE TABLE machines (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name text NOT NULL,
-  ip inet NOT NULL,
-  user text NOT NULL,
-  password text NOT NULL,
-  has_agent boolean DEFAULT false,
-  last_seen timestamptz,
-  created_at timestamptz DEFAULT now()
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  ip VARCHAR(255) NOT NULL,
+  user VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  status VARCHAR(50) DEFAULT 'offline',
+  last_seen TIMESTAMP
+);
+
+CREATE TABLE audio (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    path VARCHAR(255) UNIQUE NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE images (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    path VARCHAR(255) UNIQUE NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE javascript (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    path VARCHAR(255) UNIQUE NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 ```
 

@@ -7,9 +7,10 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: mydb
+      POSTGRES_DB: db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
@@ -61,7 +62,7 @@ services:
     networks:
       - app_network
     depends_on:
-      - backend
+      - backendpostgres
 
   minio:
     image: minio/minio
@@ -71,10 +72,33 @@ services:
       - "9090:9090"
     environment:
       MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: admin
+      MINIO_ROOT_PASSWORD: admin123
     volumes:
       - ./minio-data:/data
     command: server /data --console-address ":9090"
+    networks:
+      - app_network
+
+  minio-init:
+    image: minio/mc
+    container_name: minio-init
+    depends_on:
+      - minio
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        until /usr/bin/mc alias set myminio http://minio:9000 admin admin123; do
+          echo "Waiting for MinIO..."
+          sleep 1
+        done
+        /usr/bin/mc mb myminio/files || true
+        /usr/bin/mc mirror /data myminio/files
+    volumes:
+      - ./initminio:/data
+    networks:
+      - app_network
+
 
 networks:
   app_network:
