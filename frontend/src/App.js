@@ -12,8 +12,12 @@ import {
 import { Menu as MenuIcon } from "@mui/icons-material";
 import Sidebar from "./components/Sidebar";
 import Background from "./pages/Background";
-import Index from "./pages/Index";
+import Index from "./pages/Accueil/Accueil";
 import Exemple from "./pages/Exemple";
+import ListSounds from "./pages/Accueil/ListSounds";
+import ListMachines from "./pages/Accueil/ListMachines";
+import ListBackgrounds from "./pages/Accueil/ListBackgrounds";
+import ListJavascript from "./pages/Accueil/ListJavascript";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -52,7 +56,7 @@ function App() {
                   variant="h6"
                   className="text-gray-900 font-semibold"
                 >
-                  Mon App
+                  Menu
                 </Typography>
               </Toolbar>
             </AppBar>
@@ -71,10 +75,21 @@ function App() {
           >
             <Box className="container mx-auto px-4 py-8">
               <Routes>
+
+                {/* Element de base (module accueil) */}
+                <Route path="/list-backgrounds" element={<ListBackgrounds />} />
+                <Route path="/list-machines" element={<ListMachines />} />
+                <Route path="/list-sounds" element={<ListSounds />} />
+                <Route path="/list-javascript" element={<ListJavascript />} />
+                
+                {/* Module background */}
                 <Route path="/background" element={<Background />} />
+                
                 <Route path="/exemple/*" element={<Exemple />} />
                 <Route path="/exemple" element={<Exemple />} />
                 <Route path="/settings/*" element={<div>Paramètres</div>} />
+                
+                {/* Base page d'accueil */}
                 <Route path="/*" element={<Index />} />
               </Routes>
             </Box>

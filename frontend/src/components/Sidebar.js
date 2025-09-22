@@ -41,9 +41,10 @@ function Sidebar({ isOpen, toggleSidebar, isMobile }) {
             path: "/",
             icon: <HomeIcon />,
             children: [
-                { title: "Listes des machines", path: "/list-machine" },
-                { title: "Listes des sons", path: "/list-sound" },
+                { title: "Listes des machines", path: "/list-machines" },
+                { title: "Listes des sons", path: "/list-sounds" },
                 { title: "Listes des fonds d'écrans", path: "/list-backgrounds" },
+                { title: "Listes des scripts javascript", path: "/list-javascript" },
             ],
         },
         {
