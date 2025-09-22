@@ -43,7 +43,7 @@ function Sidebar({ isOpen, toggleSidebar, isMobile }) {
             children: [
                 { title: "Listes des machines", path: "/list-machines" },
                 { title: "Listes des sons", path: "/list-sounds" },
-                { title: "Listes des fonds d'écrans", path: "/list-backgrounds" },
+                { title: "Listes des images", path: "/list-pictures" },
                 { title: "Listes des scripts javascript", path: "/list-javascript" },
             ],
         },

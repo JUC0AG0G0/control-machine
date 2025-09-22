@@ -16,7 +16,7 @@ import Index from "./pages/Accueil/Accueil";
 import Exemple from "./pages/Exemple";
 import ListSounds from "./pages/Accueil/ListSounds";
 import ListMachines from "./pages/Accueil/ListMachines";
-import ListBackgrounds from "./pages/Accueil/ListBackgrounds";
+import ListPictures from "./pages/Accueil/ListPictures";
 import ListJavascript from "./pages/Accueil/ListJavascript";
 
 function App() {
@@ -77,7 +77,7 @@ function App() {
               <Routes>
 
                 {/* Element de base (module accueil) */}
-                <Route path="/list-backgrounds" element={<ListBackgrounds />} />
+                <Route path="/list-pictures" element={<ListPictures />} />
                 <Route path="/list-machines" element={<ListMachines />} />
                 <Route path="/list-sounds" element={<ListSounds />} />
                 <Route path="/list-javascript" element={<ListJavascript />} />
