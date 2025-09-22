@@ -1,8 +1,30 @@
 # Projet : Contrôle de PC à distance — Proposition d'architecture
 
-Bonjour Jafar 👋
 
-Voici une proposition complète (architecture logique, choix technos, schéma de fichiers, modèle de données et remarques d'implémentation) pour ton projet de contrôle à distance.
+## Lancement 
+
+
+Pour lancer ->
+
+```bash
+docker compose up --build 
+```
+
+
+
+Les ports exposés :
+
+Frontend : http://localhost:3000
+
+Backend : http://localhost:3001
+Swagger : http://localhost:3001/api/
+
+PgAdmin : http://localhost:5050
+
+Postgres : localhost:5432
+
+
+
 
 ---
 
