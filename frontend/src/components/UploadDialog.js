@@ -17,7 +17,8 @@ function UploadDialog({
     acceptedTypes = [],
 }) {
     const [file, setFile] = useState(null);
-    const [preview, setPreview] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [audioPreview, setAudioPreview] = useState(null);
     const [baseName, setBaseName] = useState("");
     const [extension, setExtension] = useState("");
     const [error, setError] = useState("");
@@ -41,7 +42,8 @@ function UploadDialog({
         if (acceptedTypes.length > 0 && !acceptedTypes.includes(ext)) {
             setError(`Seuls les fichiers ${acceptedTypes.join(", ")} sont autorisés`);
             setFile(null);
-            setPreview(null);
+            setImagePreview(null);
+            setAudioPreview(null);
             setBaseName("");
             setExtension("");
             return;
@@ -55,8 +57,15 @@ function UploadDialog({
 
     useEffect(() => {
         if (!file) {
-            setPreview(null);
+            setImagePreview(null);
+            setAudioPreview(null);
             return;
+        }
+
+        if (acceptedTypes.includes(".mp3")) {
+            const objectUrl = URL.createObjectURL(file);
+            setAudioPreview(objectUrl);
+            return () => URL.revokeObjectURL(objectUrl);
         }
 
         if (
@@ -64,9 +73,8 @@ function UploadDialog({
             acceptedTypes.includes(".jpg") ||
             acceptedTypes.includes(".jpeg")
         ) {
-            // Afficher un aperçu uniquement si c’est une image
             const objectUrl = URL.createObjectURL(file);
-            setPreview(objectUrl);
+            setImagePreview(objectUrl);
             return () => URL.revokeObjectURL(objectUrl);
         }
     }, [file, acceptedTypes]);
@@ -92,7 +100,8 @@ function UploadDialog({
 
     const reset = () => {
         setFile(null);
-        setPreview(null);
+        setImagePreview(null);
+        setAudioPreview(null);
         setBaseName("");
         setExtension("");
         setError("");
@@ -114,10 +123,17 @@ function UploadDialog({
                 >
                     {file ? (
                         <>
-                            {preview && (
+                            {imagePreview && (
                                 <img
-                                    src={preview}
-                                    alt="preview"
+                                    src={imagePreview}
+                                    alt="imagePreview"
+                                    className="mx-auto max-h-48 mb-2 rounded"
+                                />
+                            )}
+                            {audioPreview && (
+                                <img
+                                    src={audioPreview}
+                                    alt="audioPreview"
                                     className="mx-auto max-h-48 mb-2 rounded"
                                 />
                             )}
