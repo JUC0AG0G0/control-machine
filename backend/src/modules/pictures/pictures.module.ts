@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './background.controller';
-import { AppService } from './background.service';
+import { AppController } from './pictures.controller';
+import { AppService } from './pictures.service';
 
 @Module({
   imports: [],
@@ -8,6 +8,3 @@ import { AppService } from './background.service';
   providers: [AppService],
 })
 export class AppModule {}
-
-
-// Par rapport au changement de fond d'ecran

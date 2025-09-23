@@ -8,14 +8,14 @@ CREATE TABLE machines (
   last_seen TIMESTAMP
 );
 
-CREATE TABLE audio (
+CREATE TABLE sounds (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     path VARCHAR(255) UNIQUE NOT NULL,
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE images (
+CREATE TABLE pictures (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     path VARCHAR(255) UNIQUE NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE javascript (
 );
 
 
-INSERT INTO audio (name, path) VALUES
+INSERT INTO sounds (name, path) VALUES
   ('hymne-france.mp3', 'files/audio/hymne-france.mp3'),
   ('hymne-usa.mp3', 'files/audio/hymne-usa.mp3'),
   ('je-pete-ma-biere.mp3', 'files/audio/je-pete-ma-biere.mp3'),
@@ -38,7 +38,7 @@ INSERT INTO audio (name, path) VALUES
   ('Jeanne-au-secours-Jean-Marie-Le-Pen.mp3', 'files/audio/Jeanne-au-secours-Jean-Marie-Le-Pen.mp3'),
   ('karim-cuisiniere.mp3', 'files/audio/karim-cuisiniere.mp3');
 
-INSERT INTO images (name, path) VALUES
+INSERT INTO pictures (name, path) VALUES
   ('Akram.jpg', 'files/images/Akram.jpg'),
   ('Asim.jpg', 'files/images/Asim.jpg'),
   ('Florent-noel.png', 'files/images/Florent-noel.png'),

@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:15
@@ -41,7 +39,7 @@ services:
     ports:
       - "3001:3000"
     environment:
-      DATABASE_URL: postgres://admin:admin@postgres:5432/mydb
+      DATABASE_URL: postgres://admin:admin@postgres:5432/db
     networks:
       - app_network
     depends_on:
@@ -62,7 +60,7 @@ services:
     networks:
       - app_network
     depends_on:
-      - backendpostgres
+      - backend
 
   minio:
     image: minio/minio
