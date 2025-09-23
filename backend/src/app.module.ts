@@ -9,8 +9,11 @@ import { SoundsOrmEntity } from './infrastructure/database/orm-entities/sounds.o
 import { PicturesOrmEntity } from './infrastructure/database/orm-entities/pictures.orm-entity';
 import { JavascriptOrmEntity } from './infrastructure/database/orm-entities/javascript.orm-entity';
 
+import { PicturesModule } from './modules/pictures/pictures.module';
+
 @Module({
   imports: [
+    PicturesModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'postgres',
