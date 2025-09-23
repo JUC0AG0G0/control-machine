@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3001/api";
+const API_URL = "http://10.6.251.38:3001";
 
 
 ///////////////////////////////////////////////////////////////// 
@@ -35,10 +35,7 @@ export async function getPictures() {
   return response.json();
 }
 
-// Get a picture by ID
-
 // Create a new picture
-
 
 
 ///////////////////////////////////////////////////////////////// 
@@ -51,8 +48,6 @@ export async function getSounds() {
   if (!response.ok) throw new Error("Erreur lors du fetch des sons");
   return response.json();
 }
-
-// Get a sound by ID
 
 // Create a new sound
 
@@ -68,6 +63,5 @@ export async function getJavascript() {
   return response.json();
 }
 
-// Get a scripts by ID
- 
 // Create a new script javascript
+
