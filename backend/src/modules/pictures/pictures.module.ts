@@ -6,6 +6,7 @@ import { PicturesRepositoryImpl } from '../../infrastructure/database/repositori
 import { PicturesOrmEntity } from '../../infrastructure/database/orm-entities/pictures.orm-entity';
 import { MinioService } from 'src/infrastructure/storage/minio.service';
 import { GetPictureUseCase } from 'src/application/pictures/get-picture.usecase';
+import { UploadPictureUseCase } from 'src/application/pictures/upload-picture.usecase';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GetPictureUseCase } from 'src/application/pictures/get-picture.usecase'
     ListPicturesUseCase,
     MinioService,
     GetPictureUseCase,
+    UploadPictureUseCase,
     {
       provide: 'PicturesRepository',
       useClass: PicturesRepositoryImpl,

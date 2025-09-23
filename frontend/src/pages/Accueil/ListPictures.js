@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import DataTable from "../../components/DataTable";
-import { getPictures } from "../../services/out/serverApi";
+import { getPictures, createPicture } from "../../services/out/serverApi";
 import MediaModal from "../../components/MediaModal";
 import useDownloadFile from "../../hooks/useDownloadFile";
+import UploadDialog from "../../components/UploadDialog";
 import { Button } from "@mui/material";
 import Loading from "../../components/loading/Loading";
 
@@ -11,6 +12,7 @@ function ListPictures() {
   const [pictures, setPictures] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [uploadOpen, setUploadOpen] = useState(false);
 
   const downloadFile = useDownloadFile();
 
@@ -29,6 +31,16 @@ function ListPictures() {
   const handleRowClick = (row) => {
     const url = `http://0.0.0.0:3001/pictures/${row.id}`;
     setSelected({ id: row.id, name: row.name, url, type: "image" });
+  };
+
+  const handleUpload = async (file) => {
+    try {
+      await createPicture(file);
+      setUploadOpen(false);
+      fetchPictures(); // refresh liste
+    } catch (error) {
+      console.error("Erreur upload image:", error);
+    }
   };
 
   useEffect(() => {
@@ -53,7 +65,11 @@ function ListPictures() {
       />
 
       <div className="flex gap-2 mt-4">
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setUploadOpen(true)}
+        >
           Ajouter une image
         </Button>
         <Button variant="outlined" color="secondary" onClick={fetchPictures}>
@@ -68,9 +84,10 @@ function ListPictures() {
           columns={columns}
           data={pictures}
           onRowClick={handleRowClick}
-          onDownload={(row) => downloadFile(`http://0.0.0.0:3001/pictures/${row.id}`, row.name)}
+          onDownload={(row) =>
+            downloadFile(`http://0.0.0.0:3001/pictures/${row.id}`, row.name)
+          }
         />
-
       )}
 
       <MediaModal
@@ -80,6 +97,14 @@ function ListPictures() {
         url={selected?.url}
         type={selected?.type}
         onDownload={() => downloadFile(selected.url, selected.name)}
+      />
+
+      <UploadDialog
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        onUpload={handleUpload}
+        existingNames={pictures.map((p) => p.name)}
+        acceptedTypes={[".png", ".jpg"]}
       />
     </div>
   );

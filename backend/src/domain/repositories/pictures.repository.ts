@@ -4,4 +4,5 @@ import { Pictures } from '../entities/pictures.entity';
 export interface PicturesRepository {
   findAll(): Promise<Pictures[]>;
   findById(id: number): Promise<Pictures | null>;
+  save(picture: Pictures): Promise<Pictures>;
 }
