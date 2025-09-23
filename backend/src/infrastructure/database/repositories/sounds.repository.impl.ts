@@ -25,4 +25,15 @@ export class SoundsRepositoryImpl implements SoundsRepository {
     return new Sounds(pictureOrm.id, pictureOrm.name, pictureOrm.path, pictureOrm.updated_at);
   }
 
+  async save(sound: Sounds): Promise<Sounds> {
+    const entity = this.ormRepository.create({
+      name: sound.name,
+      path: sound.path,
+      updated_at: sound.updated_at,
+    });
+
+    const saved = await this.ormRepository.save(entity);
+
+    return new Sounds(saved.id!, saved.name, saved.path, saved.updated_at);
+  }
 }

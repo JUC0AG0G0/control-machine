@@ -22,7 +22,7 @@ export class PicturesController {
     private readonly listPicturesUseCase: ListPicturesUseCase,
     private readonly getPictureUseCase: GetPictureUseCase,
     private readonly uploadPictureUseCase: UploadPictureUseCase,
-  ) {}
+  ) { }
 
   @Get()
   async getAll(): Promise<Partial<Pictures>[]> {

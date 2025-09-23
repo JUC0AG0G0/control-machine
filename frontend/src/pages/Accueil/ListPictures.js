@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import DataTable from "../../components/DataTable";
-import { getPictures, createPicture } from "../../services/out/serverApi";
+import { getPictures, createPictures } from "../../services/out/serverApi";
 import MediaModal from "../../components/MediaModal";
 import useDownloadFile from "../../hooks/useDownloadFile";
 import UploadDialog from "../../components/UploadDialog";
@@ -35,9 +35,9 @@ function ListPictures() {
 
   const handleUpload = async (file) => {
     try {
-      await createPicture(file);
+      await createPictures(file);
       setUploadOpen(false);
-      fetchPictures(); // refresh liste
+      fetchPictures();
     } catch (error) {
       console.error("Erreur upload image:", error);
     }

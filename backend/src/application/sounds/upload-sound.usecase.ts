@@ -1,25 +1,25 @@
 import { Injectable, Inject } from '@nestjs/common';
-import type { PicturesRepository } from '../../domain/repositories/pictures.repository';
+import type { SoundsRepository } from '../../domain/repositories/sounds.repository';
 import { MinioService } from '../../infrastructure/storage/minio.service';
-import { Pictures } from '../../domain/entities/pictures.entity';
+import { Sounds } from '../../domain/entities/sounds.entity';
 import type { MulterFile } from '../../infrastructure/types/multer-file.type';
 
 
 @Injectable()
-export class UploadPictureUseCase {
+export class UploadSoundUseCase {
   constructor(
     private readonly minioService: MinioService,
-    @Inject('PicturesRepository')
-    private readonly picturesRepository: PicturesRepository,
+    @Inject('SoundsRepository')
+    private readonly soundsRepository: SoundsRepository,
   ) {}
 
-  async execute(file: MulterFile): Promise<Pictures> {
+  async execute(file: MulterFile): Promise<Sounds> {
     if (!file) {
       throw new Error('No file provided');
     }
 
     const bucket = 'files';
-    const folder = 'images';
+    const folder = 'audio';
     const filePath = `${folder}/${file.originalname}`;
 
     // Upload dans MinIO
@@ -31,7 +31,7 @@ export class UploadPictureUseCase {
     );
 
     // Créer l'entité
-    const picture = new Pictures(
+    const sound = new Sounds(
       -1,
       file.originalname,
       `${bucket}/${filePath}`,
@@ -39,6 +39,6 @@ export class UploadPictureUseCase {
     );
 
     // Sauvegarder en base
-    return this.picturesRepository.save(picture);
+    return this.soundsRepository.save(sound);
   }
 }

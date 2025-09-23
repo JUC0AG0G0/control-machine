@@ -6,6 +6,7 @@ import { SoundsRepositoryImpl } from '../../infrastructure/database/repositories
 import { SoundsOrmEntity } from '../../infrastructure/database/orm-entities/sounds.orm-entity';
 import { MinioService } from 'src/infrastructure/storage/minio.service';
 import { GetSoundUseCase } from 'src/application/sounds/get-sound.usecase';
+import { UploadSoundUseCase } from '../../application/sounds/upload-sound.usecase';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GetSoundUseCase } from 'src/application/sounds/get-sound.usecase';
     ListSoundsUseCase,
     MinioService,
     GetSoundUseCase,
+    UploadSoundUseCase,
     {
       provide: 'SoundsRepository',
       useClass: SoundsRepositoryImpl,

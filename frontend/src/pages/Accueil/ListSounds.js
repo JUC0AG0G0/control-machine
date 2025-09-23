@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import DataTable from "../../components/DataTable";
-import { getSounds } from "../../services/out/serverApi";
+import { createSounds, getSounds } from "../../services/out/serverApi";
 import MediaModal from "../../components/MediaModal";
 import useDownloadFile from "../../hooks/useDownloadFile";
+import UploadDialog from "../../components/UploadDialog";
 import { Button } from "@mui/material";
 import Loading from "../../components/loading/Loading";
 
@@ -11,6 +12,7 @@ function ListSounds() {
   const [sounds, setSounds] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [uploadOpen, setUploadOpen] = useState(false);
 
   const downloadFile = useDownloadFile();
 
@@ -29,6 +31,16 @@ function ListSounds() {
   const handleRowClick = (row) => {
     const url = `http://0.0.0.0:3001/sounds/${row.id}`;
     setSelected({ id: row.id, name: row.name, url, type: "audio" });
+  };
+
+  const handleUpload = async (file) => {
+    try {
+      await createSounds(file);
+      setUploadOpen(false);
+      fetchSounds();
+    } catch (error) {
+      console.error("Erreur upload son:", error);
+    }
   };
 
   useEffect(() => {
@@ -53,7 +65,11 @@ function ListSounds() {
       />
 
       <div className="flex gap-2 mt-4">
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setUploadOpen(true)}
+        >
           Ajouter un son
         </Button>
         <Button variant="outlined" color="secondary" onClick={fetchSounds}>
@@ -68,7 +84,9 @@ function ListSounds() {
           columns={columns}
           data={sounds}
           onRowClick={handleRowClick}
-          onDownload={(row) => downloadFile(`http://0.0.0.0:3001/audio/${row.id}`, row.name)}
+          onDownload={(row) =>
+            downloadFile(`http://0.0.0.0:3001/sounds/${row.id}`, row.name)
+          }
         />
       )}
 
@@ -79,6 +97,14 @@ function ListSounds() {
         url={selected?.url}
         type={selected?.type}
         onDownload={() => downloadFile(selected.url, selected.name)}
+      />
+
+      <UploadDialog
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        onUpload={handleUpload}
+        existingNames={sounds.map((p) => p.name)}
+        acceptedTypes={[".mp3"]}
       />
     </div>
   );

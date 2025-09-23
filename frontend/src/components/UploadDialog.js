@@ -62,21 +62,28 @@ function UploadDialog({
             return;
         }
 
-        if (acceptedTypes.includes(".mp3")) {
-            const objectUrl = URL.createObjectURL(file);
-            setAudioPreview(objectUrl);
-            return () => URL.revokeObjectURL(objectUrl);
-        }
+        let objectUrl = null;
 
-        if (
+        if (acceptedTypes.includes(".mp3")) {
+            objectUrl = URL.createObjectURL(file);
+            setAudioPreview(objectUrl);
+            setImagePreview(null);
+        } else if (
             acceptedTypes.includes(".png") ||
             acceptedTypes.includes(".jpg") ||
             acceptedTypes.includes(".jpeg")
         ) {
-            const objectUrl = URL.createObjectURL(file);
+            objectUrl = URL.createObjectURL(file);
             setImagePreview(objectUrl);
-            return () => URL.revokeObjectURL(objectUrl);
+            setAudioPreview(null);
         }
+
+        // Fonction de nettoyage pour ce useEffect
+        return () => {
+            if (objectUrl) {
+                URL.revokeObjectURL(objectUrl);
+            }
+        };
     }, [file, acceptedTypes]);
 
     useEffect(() => {
@@ -99,6 +106,14 @@ function UploadDialog({
     };
 
     const reset = () => {
+        // Nettoyer les URLs d'objet avant de reset
+        if (imagePreview) {
+            URL.revokeObjectURL(imagePreview);
+        }
+        if (audioPreview) {
+            URL.revokeObjectURL(audioPreview);
+        }
+
         setFile(null);
         setImagePreview(null);
         setAudioPreview(null);
@@ -131,11 +146,15 @@ function UploadDialog({
                                 />
                             )}
                             {audioPreview && (
-                                <img
-                                    src={audioPreview}
-                                    alt="audioPreview"
-                                    className="mx-auto max-h-48 mb-2 rounded"
-                                />
+                                <audio
+                                    controls
+                                    autoPlay
+                                    className="w-full mx-auto mb-2 rounded"
+                                    key={audioPreview}
+                                >
+                                    <source src={audioPreview} type="audio/mpeg" />
+                                    Votre navigateur ne supporte pas la lecture audio.
+                                </audio>
                             )}
                             <Typography variant="body2" className="mb-2">
                                 {file.name} ({Math.round(file.size / 1024)} Ko)

@@ -34,19 +34,16 @@ export async function getPictures() {
 }
 
 // Create a new picture
-export async function createPicture(file) {
+export async function createPictures(file) {
   const formData = new FormData();
-  formData.append("file", file); // "file" doit correspondre à FileInterceptor('file')
+  formData.append("file", file);
 
   const response = await fetch(API_URL + "/pictures", {
     method: "POST",
     body: formData,
   });
 
-  if (!response.ok) {
-    throw new Error("Erreur lors de l'upload de l'image");
-  }
-
+  if (!response.ok) throw new Error("Erreur lors de l'upload de l'image");
   return response.json();
 }
 
@@ -62,6 +59,18 @@ export async function getSounds() {
 }
 
 // Create a new sound
+export async function createSounds(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(API_URL + "/sounds", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) throw new Error("Erreur lors de l'upload du son");
+  return response.json();
+}
 
 /////////////////////////////////////////////////////////////////
 //             Gestion des scripts javascript
