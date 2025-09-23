@@ -1,18 +1,86 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
+import DataTable from "../../components/DataTable";
+import { getSounds } from "../../services/out/serverApi";
+import MediaModal from "../../components/MediaModal";
+import useDownloadFile from "../../hooks/useDownloadFile";
+import { Button } from "@mui/material";
+import Loading from "../../components/loading/Loading";
 
 function ListSounds() {
+  const [sounds, setSounds] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState(null);
+
+  const downloadFile = useDownloadFile();
+
+  const fetchSounds = async () => {
+    setLoading(true);
+    try {
+      const data = await getSounds();
+      setSounds(data);
+    } catch (error) {
+      console.error("Erreur fetch sounds:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRowClick = (row) => {
+    const url = `http://0.0.0.0:3001/sounds/${row.id}`;
+    setSelected({ id: row.id, name: row.name, url, type: "audio" });
+  };
+
+  useEffect(() => {
+    fetchSounds();
+  }, []);
+
+  const columns = [
+    { field: "id", headerName: "ID" },
+    { field: "name", headerName: "Nom" },
+    {
+      field: "updated_at",
+      headerName: "Date",
+      renderCell: (value) => new Date(value).toLocaleDateString("fr-FR"),
+    },
+  ];
 
   return (
-    
-    <div>
-      <Header 
-        title={`Liste des sons`}
-        description={`Voici la liste des sons enregistré dans la base de donnée. Vous pouvez les écouté ou en ajouter.`}
+    <div className="p-4">
+      <Header
+        title="Liste des sons"
+        description="Voici la liste des sons enregistrés dans la base de données. Vous pouvez écouter et télécharger."
       />
 
-    </div>
+      <div className="flex gap-2 mt-4">
+        <Button variant="contained" color="primary">
+          Ajouter un son
+        </Button>
+        <Button variant="outlined" color="secondary" onClick={fetchSounds}>
+          Rafraîchir
+        </Button>
+      </div>
 
+      {loading ? (
+        <Loading />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={sounds}
+          onRowClick={handleRowClick}
+          onDownload={(row) => downloadFile(`http://0.0.0.0:3001/audio/${row.id}`, row.name)}
+        />
+      )}
+
+      <MediaModal
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        title={selected?.name}
+        url={selected?.url}
+        type={selected?.type}
+        onDownload={() => downloadFile(selected.url, selected.name)}
+      />
+    </div>
   );
 }
 

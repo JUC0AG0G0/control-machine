@@ -27,7 +27,7 @@ function ListPictures() {
   };
 
   const handleRowClick = (row) => {
-    const url = `http://10.6.251.38:3001/pictures/${row.id}`;
+    const url = `http://0.0.0.0:3001/pictures/${row.id}`;
     setSelected({ id: row.id, name: row.name, url, type: "image" });
   };
 
@@ -68,7 +68,7 @@ function ListPictures() {
           columns={columns}
           data={pictures}
           onRowClick={handleRowClick}
-          onDownload={(row) => downloadFile(`http://10.6.251.38:3001/pictures/${row.id}`, row.name)}
+          onDownload={(row) => downloadFile(`http://0.0.0.0:3001/pictures/${row.id}`, row.name)}
         />
 
       )}

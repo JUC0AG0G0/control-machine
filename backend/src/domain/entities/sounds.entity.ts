@@ -1,9 +1,9 @@
 // domain/entities/sounds.entity.ts
 export class Sounds {
   constructor(
-    public readonly id: number,
-    public readonly name: string,
-    public readonly path: string,
-    public readonly updatedAt: Date,
+    public id: number,
+    public name: string,
+    public path: string,
+    public updated_at: Date,
   ) {}
 }

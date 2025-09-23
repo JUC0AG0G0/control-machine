@@ -10,10 +10,12 @@ import { PicturesOrmEntity } from './infrastructure/database/orm-entities/pictur
 import { JavascriptOrmEntity } from './infrastructure/database/orm-entities/javascript.orm-entity';
 
 import { PicturesModule } from './modules/pictures/pictures.module';
+import { SoundsModule } from './modules/sounds/sounds.module';
 
 @Module({
   imports: [
     PicturesModule,
+    SoundsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'postgres',

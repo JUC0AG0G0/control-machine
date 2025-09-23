@@ -28,7 +28,7 @@ function MediaModal({ open, onClose, title, url, type, onDownload }) {
           />
         )}
         {type === "audio" && (
-          <audio controls className="w-full">
+          <audio controls autoPlay className="w-full">
             <source src={url} type="audio/mpeg" />
             Votre navigateur ne supporte pas la lecture audio.
           </audio>
