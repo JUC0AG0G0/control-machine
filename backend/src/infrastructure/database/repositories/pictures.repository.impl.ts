@@ -18,4 +18,11 @@ export class PicturesRepositoryImpl implements PicturesRepository {
       (p) => new Pictures(p.id, p.name, p.path, p.updated_at),
     );
   }
+
+  async findById(id: number): Promise<Pictures | null> {
+    const pictureOrm = await this.ormRepository.findOne({ where: { id } });
+    if (!pictureOrm) return null;
+    return new Pictures(pictureOrm.id, pictureOrm.name, pictureOrm.path, pictureOrm.updated_at);
+  }
+
 }
