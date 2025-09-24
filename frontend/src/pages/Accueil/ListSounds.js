@@ -7,6 +7,8 @@ import useDownloadFile from "../../hooks/useDownloadFile";
 import UploadDialog from "../../components/UploadDialog";
 import { Button } from "@mui/material";
 import Loading from "../../components/loading/Loading";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import AddIcon from "@mui/icons-material/Add";
 
 function ListSounds() {
   const [sounds, setSounds] = useState([]);
@@ -68,11 +70,17 @@ function ListSounds() {
         <Button
           variant="contained"
           color="primary"
+          startIcon={<AddIcon />}
           onClick={() => setUploadOpen(true)}
         >
           Ajouter un son
         </Button>
-        <Button variant="outlined" color="secondary" onClick={fetchSounds}>
+        <Button 
+          variant="outlined" 
+          color="secondary" 
+          startIcon={<RefreshIcon />}
+          onClick={fetchSounds}
+        >
           Rafraîchir
         </Button>
       </div>

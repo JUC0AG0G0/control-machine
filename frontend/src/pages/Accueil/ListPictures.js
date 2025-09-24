@@ -7,6 +7,8 @@ import useDownloadFile from "../../hooks/useDownloadFile";
 import UploadDialog from "../../components/UploadDialog";
 import { Button } from "@mui/material";
 import Loading from "../../components/loading/Loading";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import AddIcon from "@mui/icons-material/Add";
 
 function ListPictures() {
   const [pictures, setPictures] = useState([]);
@@ -67,12 +69,18 @@ function ListPictures() {
       <div className="flex gap-2 mt-4">
         <Button
           variant="contained"
+          startIcon={<AddIcon />}
           color="primary"
           onClick={() => setUploadOpen(true)}
         >
           Ajouter une image
         </Button>
-        <Button variant="outlined" color="secondary" onClick={fetchPictures}>
+        <Button 
+          variant="outlined"
+          color="secondary" 
+          onClick={fetchPictures}
+          startIcon={<RefreshIcon />}
+        >
           Rafraîchir
         </Button>
       </div>

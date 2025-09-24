@@ -1,26 +1,25 @@
-// infrastructure/database/orm-entities/machines.orm-entity.ts
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity('machines')
+@Entity("machines")
 export class MachinesOrmEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 255 })
+  @Column()
   name: string;
 
-  @Column({ length: 255 })
+  @Column()
   ip: string;
 
-  @Column({ length: 255 })
+  @Column()
   username: string;
 
-  @Column({ length: 255 })
+  @Column()
   password: string;
 
-  @Column({ length: 50, default: 'offline' })
+  @Column({ default: "offline" })
   status: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: "timestamp", nullable: true })
   last_seen: Date | null;
 }

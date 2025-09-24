@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import { Button } from "@mui/material";
+import { Button, Checkbox } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
 import {
@@ -13,10 +13,12 @@ import {
   Paper,
 } from "@mui/material";
 import { getServers } from "../../services/out/serverApi";
+import { selectionService } from "../../services/selectionService";
 
 function ListMachines() {
   const [servers, setServers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState(selectionService.getSelected());
 
   const fetchServers = async () => {
     try {
@@ -32,7 +34,15 @@ function ListMachines() {
 
   useEffect(() => {
     fetchServers();
+
+    // Abonnement aux changements du service
+    const unsubscribe = selectionService.subscribe(setSelected);
+    return () => unsubscribe();
   }, []);
+
+  const toggleSelection = (id) => {
+    selectionService.toggle(id);
+  };
 
   return (
     <div className="p-4">
@@ -60,7 +70,7 @@ function ListMachines() {
           onClick={fetchServers}
           disabled={loading}
         >
-          {loading ? "Chargement..." : "Rafraîchir le tableau"}
+          {loading ? "Chargement..." : "Rafraîchir"}
         </Button>
       </div>
 
@@ -69,6 +79,7 @@ function ListMachines() {
         <Table>
           <TableHead className="bg-gray-100">
             <TableRow>
+              <TableCell /> {/* colonne checkbox */}
               <TableCell>ID</TableCell>
               <TableCell>Nom</TableCell>
               <TableCell>IP</TableCell>
@@ -82,18 +93,26 @@ function ListMachines() {
             {servers.length > 0 ? (
               servers.map((server) => (
                 <TableRow key={server.id} hover>
+                  <TableCell>
+                    <Checkbox
+                      checked={selected.includes(server.id)}
+                      onChange={() => toggleSelection(server.id)}
+                    />
+                  </TableCell>
                   <TableCell>{server.id}</TableCell>
-                  <TableCell>{server.nom}</TableCell>
+                  <TableCell>{server.name}</TableCell>
                   <TableCell>{server.ip}</TableCell>
                   <TableCell>{server.username}</TableCell>
                   <TableCell>{server.password}</TableCell>
                   <TableCell>{server.status}</TableCell>
-                  <TableCell>{server.last_seen}</TableCell>
+                  <TableCell>
+                    {server.last_seen ? server.last_seen : "jamais détecté"}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} align="center">
+                <TableCell colSpan={8} align="center">
                   Aucun serveur trouvé.
                 </TableCell>
               </TableRow>

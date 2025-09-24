@@ -6,14 +6,14 @@ const API_URL = "http://0.0.0.0:3001";
 
 // Récupérer tous les serveurs
 export async function getServers() {
-  const response = await fetch(API_URL + "/servers");
+  const response = await fetch(API_URL + "/machines");
   if (!response.ok) throw new Error("Erreur lors du fetch des serveurs");
   return response.json();
 }
 
 // Créer un nouveau serveur
 export async function createServer(serverData) {
-  const response = await fetch(API_URL + "/servers", {
+  const response = await fetch(API_URL + "/machines", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(serverData),

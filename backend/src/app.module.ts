@@ -11,11 +11,13 @@ import { JavascriptOrmEntity } from './infrastructure/database/orm-entities/java
 
 import { PicturesModule } from './modules/pictures/pictures.module';
 import { SoundsModule } from './modules/sounds/sounds.module';
+import { MachinesModule } from "./modules/machines/machines.module";
 
 @Module({
   imports: [
     PicturesModule,
     SoundsModule,
+    MachinesModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'postgres',
