@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import { Button, Checkbox } from "@mui/material";
+import { Button, Checkbox, IconButton, Tooltip } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
+import TerminalIcon from "@mui/icons-material/Terminal";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import {
   Table,
   TableBody,
@@ -35,7 +37,7 @@ function ListMachines() {
   useEffect(() => {
     fetchServers();
 
-    // Abonnement aux changements du service
+    // Abonnement au service global
     const unsubscribe = selectionService.subscribe(setSelected);
     return () => unsubscribe();
   }, []);
@@ -79,7 +81,7 @@ function ListMachines() {
         <Table>
           <TableHead className="bg-gray-100">
             <TableRow>
-              <TableCell /> {/* colonne checkbox */}
+              <TableCell />
               <TableCell>ID</TableCell>
               <TableCell>Nom</TableCell>
               <TableCell>IP</TableCell>
@@ -87,6 +89,7 @@ function ListMachines() {
               <TableCell>Password</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Last Seen</TableCell>
+              <TableCell align="center">Action rapide</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -108,11 +111,37 @@ function ListMachines() {
                   <TableCell>
                     {server.last_seen ? server.last_seen : "jamais détecté"}
                   </TableCell>
+                  <TableCell align="center">
+                    <div className="flex justify-center gap-2">
+                      <Tooltip title="Connexion SSH" arrow>
+                        <IconButton
+                          color="default"
+                          size="small"
+                          onClick={() =>
+                            alert(`SSH vers ${server.name} (${server.ip})`)
+                          }
+                        >
+                          <TerminalIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Play song" arrow>
+                        <IconButton
+                          color="default"
+                          size="small"
+                          onClick={() =>
+                            alert(`Lecture de son sur ${server.name}`)
+                          }
+                        >
+                          <VolumeUpIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8} align="center">
+                <TableCell colSpan={9} align="center">
                   Aucun serveur trouvé.
                 </TableCell>
               </TableRow>

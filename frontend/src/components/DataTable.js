@@ -62,7 +62,7 @@ function DataTable({ columns, data, onRowClick, onDownload }) {
                   >
                     <div className="flex gap-2">
                       {onRowClick && (
-                        <Tooltip title="Voir" placement="top">
+                        <Tooltip title="Voir" arrow>
                           <IconButton
                             size="small"
                             color="default"
@@ -73,7 +73,7 @@ function DataTable({ columns, data, onRowClick, onDownload }) {
                         </Tooltip>
                       )}
                       {onDownload && (
-                        <Tooltip title="Télécharger" placement="top">
+                        <Tooltip title="Télécharger" arrow>
                           <IconButton
                             size="small"
                             color="default"
