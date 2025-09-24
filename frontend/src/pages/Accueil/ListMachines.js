@@ -42,6 +42,50 @@ function ListMachines() {
   });
   const [error, setError] = useState("");
 
+  const isValidIPv4 = (ip) => {
+    const ipv4Regex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+    const match = ip.match(ipv4Regex);
+
+    if (!match) return false;
+
+    for (let i = 1; i <= 4; i++) {
+      const octet = parseInt(match[i], 10);
+      if (octet < 0 || octet > 255) return false;
+    }
+
+    return true;
+  };
+
+  const normalizeIP = (ip) => {
+    if (!isValidIPv4(ip)) return ip;
+
+    return ip
+      .split(".")
+      .map((octet) => parseInt(octet, 10).toString())
+      .join(".");
+  };
+
+  const handleIPInput = (value) => {
+    return value.replace(/[^0-9.]/g, "");
+  };
+
+  const getIPError = (ip) => {
+    if (!ip) return "L'adresse IP est obligatoire.";
+
+    const filteredIP = handleIPInput(ip);
+    if (filteredIP !== ip)
+      return "L'IP ne peut contenir que des chiffres et des points.";
+
+    if (!isValidIPv4(ip)) return "Format d'adresse IPv4 invalide.";
+
+    const normalizedIP = normalizeIP(ip);
+    const duplicateIP = servers.some((s) => normalizeIP(s.ip) === normalizedIP);
+
+    if (duplicateIP) return "Une machine avec cette IP existe déjà.";
+
+    return "";
+  };
+
   const fetchServers = async () => {
     try {
       setLoading(true);
@@ -66,7 +110,14 @@ function ListMachines() {
   };
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "ip") {
+      const filteredValue = handleIPInput(value);
+      setForm({ ...form, [name]: filteredValue });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   const handleAddMachine = async () => {
@@ -78,22 +129,33 @@ function ListMachines() {
     }
 
     const duplicateName = servers.some((s) => s.name === form.name);
-    const duplicateIp = servers.some((s) => s.ip === form.ip);
-
     if (duplicateName) {
       setError("Une machine avec ce nom existe déjà.");
       return;
     }
-    if (duplicateIp) {
+
+    if (!isValidIPv4(form.ip)) {
+      setError("Format d'adresse IPv4 invalide.");
+      return;
+    }
+
+    const normalizedNewIP = normalizeIP(form.ip);
+    const duplicateIP = servers.some(
+      (s) => normalizeIP(s.ip) === normalizedNewIP
+    );
+    if (duplicateIP) {
       setError("Une machine avec cette IP existe déjà.");
       return;
     }
 
     try {
-      const newMachine = await createServer(form);
+      const serverData = {
+        ...form,
+        ip: normalizedNewIP,
+      };
 
+      const newMachine = await createServer(serverData);
       setServers([...servers, newMachine]);
-
       setForm({ name: "", ip: "", username: "", password: "" });
       setOpen(false);
     } catch (err) {
@@ -101,6 +163,9 @@ function ListMachines() {
       setError("Erreur lors de la création de la machine.");
     }
   };
+
+  const ipError = getIPError(form.ip);
+  const hasIPError = !!ipError;
 
   return (
     <div className="p-4">
@@ -235,14 +300,9 @@ function ListMachines() {
             value={form.ip}
             onChange={handleChange}
             fullWidth
-            error={!form.ip ? true : servers.some((s) => s.ip === form.ip)}
-            helperText={
-              !form.ip
-                ? "L'adresse IP est obligatoire."
-                : servers.some((s) => s.ip === form.ip)
-                  ? "Une machine avec cette IP existe déjà."
-                  : ""
-            }
+            error={hasIPError}
+            helperText={ipError}
+            placeholder="ex: 192.168.1.1"
           />
           <TextField
             label="Username"
@@ -278,8 +338,8 @@ function ListMachines() {
               !form.ip ||
               !form.username ||
               !form.password ||
-              servers.some((s) => s.name === form.name) ||
-              servers.some((s) => s.ip === form.ip)
+              hasIPError ||
+              servers.some((s) => s.name === form.name)
             }
           >
             Ajouter
