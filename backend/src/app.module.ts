@@ -11,13 +11,18 @@ import { JavascriptOrmEntity } from './infrastructure/database/orm-entities/java
 
 import { PicturesModule } from './modules/pictures/pictures.module';
 import { SoundsModule } from './modules/sounds/sounds.module';
-import { MachinesModule } from "./modules/machines/machines.module";
+import { MachinesModule } from './modules/machines/machines.module';
+
+import { ScheduleModule } from '@nestjs/schedule';
+import { MachineCronModule } from './infrastructure/cron/machine-cron.module';
 
 @Module({
   imports: [
+    MachineCronModule,
     PicturesModule,
     SoundsModule,
     MachinesModule,
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'postgres',
