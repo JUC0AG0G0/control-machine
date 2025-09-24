@@ -96,16 +96,11 @@ export class MachineCheckService {
           } else if (err.code === 'ECONNREFUSED') {
             machine.status = 'ssh down';
             console.log(`Connexion refusée pour la machine ${machine.name}.`);
-          } else if (err.code === 'EHOSTUNREACH') {
+          } else {
             machine.status = 'offline';
             console.log(`Hôte injoignable pour la machine ${machine.name}.`);
-          } else {
-            machine.status = 'error';
-            console.log(`Erreur de connexion pour la machine ${machine.name}:`, err.message);
           }
           
-          machine.last_seen = new Date();
-
           try {
             await this.machineRepository.save(machine);
           } catch (saveErr) {
