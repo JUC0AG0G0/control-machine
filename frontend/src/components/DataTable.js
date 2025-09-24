@@ -12,8 +12,15 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download";
+import LinkIcon from '@mui/icons-material/Link';
 
 function DataTable({ columns, data, onRowClick, onDownload }) {
+  const handleCopyLink = (row) => {
+    if (!row?.path) return;
+    const url = `http://0.0.0.0:3001/${row.path}`;
+    navigator.clipboard.writeText(url);
+  };
+
   return (
     <TableContainer component={Paper} className="shadow-lg rounded-2xl mt-4">
       <Table>
@@ -69,6 +76,17 @@ function DataTable({ columns, data, onRowClick, onDownload }) {
                             onClick={() => onRowClick(row)}
                           >
                             <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {row.path && (
+                        <Tooltip title="Copier le lien" arrow>
+                          <IconButton
+                            size="small"
+                            color="default"
+                            onClick={() => handleCopyLink(row)}
+                          >
+                            <LinkIcon />
                           </IconButton>
                         </Tooltip>
                       )}

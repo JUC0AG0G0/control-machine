@@ -4,7 +4,7 @@ import { Readable } from 'stream';
 
 @Injectable()
 export class MinioService {
-  private client: Client;
+  public client: Client;
 
   constructor() {
     this.client = new Client({

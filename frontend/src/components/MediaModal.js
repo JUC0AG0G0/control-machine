@@ -8,8 +8,9 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DownloadIcon from "@mui/icons-material/Download";
+import LinkIcon from '@mui/icons-material/Link';
 
-function MediaModal({ open, onClose, title, url, type, onDownload }) {
+function MediaModal({ open, onClose, title, url, type, onDownload, onCopyLink }) {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <div className="flex items-center justify-between">
@@ -36,6 +37,16 @@ function MediaModal({ open, onClose, title, url, type, onDownload }) {
       </DialogContent>
 
       <DialogActions>
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<LinkIcon />}
+          onClick={onCopyLink}
+          disabled={!url}
+        >
+          Copier le lien
+        </Button>
+
         <Button
           variant="outlined"
           color="primary"

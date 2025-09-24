@@ -31,8 +31,14 @@ function ListSounds() {
   };
 
   const handleRowClick = (row) => {
-    const url = `http://0.0.0.0:3001/sounds/${row.id}`;
-    setSelected({ id: row.id, name: row.name, url, type: "audio" });
+    const url = `http://0.0.0.0:3001/${row.path}`;
+    setSelected({ id: row.id, name: row.name, url, type: "audio", path: row.path });
+  };
+
+  const handleCopyLink = () => {
+    if (!selected?.path) return;
+    const url = `http://0.0.0.0:3001/${selected.path}`;
+    navigator.clipboard.writeText(url);
   };
 
   const handleUpload = async (file) => {
@@ -105,6 +111,7 @@ function ListSounds() {
         url={selected?.url}
         type={selected?.type}
         onDownload={() => downloadFile(selected.url, selected.name)}
+        onCopyLink={handleCopyLink}
       />
 
       <UploadDialog

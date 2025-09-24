@@ -31,8 +31,14 @@ function ListPictures() {
   };
 
   const handleRowClick = (row) => {
-    const url = `http://0.0.0.0:3001/pictures/${row.id}`;
-    setSelected({ id: row.id, name: row.name, url, type: "image" });
+    const url = `http://0.0.0.0:3001/${row.path}`;
+    setSelected({ id: row.id, name: row.name, url, type: "image", path: row.path });
+  };
+
+  const handleCopyLink = () => {
+    if (!selected?.path) return;
+    const url = `http://0.0.0.0:3001/${selected.path}`;
+    navigator.clipboard.writeText(url);
   };
 
   const handleUpload = async (file) => {
@@ -105,6 +111,7 @@ function ListPictures() {
         url={selected?.url}
         type={selected?.type}
         onDownload={() => downloadFile(selected.url, selected.name)}
+        onCopyLink={handleCopyLink}
       />
 
       <UploadDialog
