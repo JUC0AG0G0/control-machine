@@ -28,6 +28,28 @@ import { getServers } from "../../services/out/serverApi";
 import { selectionService } from "../../services/selectionService";
 import { createServer } from "../../services/out/serverApi";
 
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - date) / 1000);
+
+  const rtf = new Intl.RelativeTimeFormat("fr", { numeric: "auto" });
+
+  if (diffInSeconds < 60) {
+    return rtf.format(-diffInSeconds, "second");
+  }
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return rtf.format(-diffInMinutes, "minute");
+  }
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return rtf.format(-diffInHours, "hour");
+  }
+  const diffInDays = Math.floor(diffInHours / 24);
+  return rtf.format(-diffInDays, "day");
+}
+
 function ListMachines() {
   const [servers, setServers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -228,7 +250,8 @@ function ListMachines() {
                   <TableCell>{server.password}</TableCell>
                   <TableCell>{server.status}</TableCell>
                   <TableCell>
-                    {server.last_seen ? server.last_seen : "jamais détecté"}
+                      {server.last_seen ? timeAgo(server.last_seen) : "jamais détecté"}
+
                   </TableCell>
                   <TableCell align="center">
                     <div className="flex justify-center gap-2">
