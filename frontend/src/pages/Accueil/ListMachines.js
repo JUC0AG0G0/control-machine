@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import { Button, Checkbox, IconButton, Tooltip } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  IconButton,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
 import TerminalIcon from "@mui/icons-material/Terminal";
@@ -16,11 +26,21 @@ import {
 } from "@mui/material";
 import { getServers } from "../../services/out/serverApi";
 import { selectionService } from "../../services/selectionService";
+import { createServer } from "../../services/out/serverApi";
 
 function ListMachines() {
   const [servers, setServers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(selectionService.getSelected());
+
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    ip: "",
+    username: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
 
   const fetchServers = async () => {
     try {
@@ -37,13 +57,49 @@ function ListMachines() {
   useEffect(() => {
     fetchServers();
 
-    // Abonnement au service global
     const unsubscribe = selectionService.subscribe(setSelected);
     return () => unsubscribe();
   }, []);
 
   const toggleSelection = (id) => {
     selectionService.toggle(id);
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleAddMachine = async () => {
+    setError("");
+
+    if (!form.name || !form.ip || !form.username || !form.password) {
+      setError("Tous les champs sont obligatoires.");
+      return;
+    }
+
+    const duplicateName = servers.some((s) => s.name === form.name);
+    const duplicateIp = servers.some((s) => s.ip === form.ip);
+
+    if (duplicateName) {
+      setError("Une machine avec ce nom existe déjà.");
+      return;
+    }
+    if (duplicateIp) {
+      setError("Une machine avec cette IP existe déjà.");
+      return;
+    }
+
+    try {
+      const newMachine = await createServer(form);
+
+      setServers([...servers, newMachine]);
+
+      setForm({ name: "", ip: "", username: "", password: "" });
+      setOpen(false);
+    } catch (err) {
+      console.error(err);
+      setError("Erreur lors de la création de la machine.");
+    }
   };
 
   return (
@@ -53,14 +109,13 @@ function ListMachines() {
         description={`Voici la liste des machines enregistré dans la base de donnée. Vous pouvez voir quelle sont les machines accessibles. Vous pouvez aussi en ajouter.`}
       />
 
-      {/* Boutons */}
       <div className="flex gap-4 my-4">
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
           className="rounded-2xl shadow-md"
-          onClick={() => alert("Ajout d'une machine")}
+          onClick={() => setOpen(true)}
         >
           Ajouter une machine
         </Button>
@@ -76,7 +131,6 @@ function ListMachines() {
         </Button>
       </div>
 
-      {/* Tableau */}
       <TableContainer component={Paper} className="shadow-lg rounded-2xl">
         <Table>
           <TableHead className="bg-gray-100">
@@ -149,6 +203,89 @@ function ListMachines() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Ajouter une machine</DialogTitle>
+        <DialogContent className="flex flex-col gap-4 mt-2">
+          <TextField
+            label="Nom"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            fullWidth
+            error={
+              !form.name ? true : servers.some((s) => s.name === form.name)
+            }
+            helperText={
+              !form.name
+                ? "Le nom est obligatoire."
+                : servers.some((s) => s.name === form.name)
+                  ? "Une machine avec ce nom existe déjà."
+                  : ""
+            }
+          />
+          <TextField
+            label="IP"
+            name="ip"
+            value={form.ip}
+            onChange={handleChange}
+            fullWidth
+            error={!form.ip ? true : servers.some((s) => s.ip === form.ip)}
+            helperText={
+              !form.ip
+                ? "L'adresse IP est obligatoire."
+                : servers.some((s) => s.ip === form.ip)
+                  ? "Une machine avec cette IP existe déjà."
+                  : ""
+            }
+          />
+          <TextField
+            label="Username"
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+            fullWidth
+            error={!form.username}
+            helperText={!form.username ? "Le username est obligatoire." : ""}
+          />
+          <TextField
+            label="Password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            fullWidth
+            error={!form.password}
+            helperText={
+              !form.password ? "Le mot de passe est obligatoire." : ""
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="secondary">
+            Annuler
+          </Button>
+          <Button
+            onClick={handleAddMachine}
+            color="primary"
+            variant="contained"
+            disabled={
+              !form.name ||
+              !form.ip ||
+              !form.username ||
+              !form.password ||
+              servers.some((s) => s.name === form.name) ||
+              servers.some((s) => s.ip === form.ip)
+            }
+          >
+            Ajouter
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
