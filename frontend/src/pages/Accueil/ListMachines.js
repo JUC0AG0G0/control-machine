@@ -248,37 +248,61 @@ function ListMachines() {
                   <TableCell>{server.ip}</TableCell>
                   <TableCell>{server.username}</TableCell>
                   <TableCell>{server.password}</TableCell>
-                  <TableCell>{server.status}</TableCell>
+                  <TableCell>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "12px",
+                        height: "12px",
+                        borderRadius: "50%",
+                        marginRight: "8px",
+                        backgroundColor:
+                          server.status === "online"
+                            ? "green"
+                            : server.status === "auth fail"
+                            ? "blue"
+                            : server.status === "ssh down"
+                            ? "orange"
+                            : "red",
+                      }}
+                    />
+                    {server.status}
+                  </TableCell>
                   <TableCell>
                       {server.last_seen ? timeAgo(server.last_seen) : "jamais détecté"}
-
                   </TableCell>
                   <TableCell align="center">
-                    <div className="flex justify-center gap-2">
-                      <Tooltip title="Connexion SSH" arrow>
-                        <IconButton
-                          color="default"
-                          size="small"
-                          onClick={() =>
-                            alert(`SSH vers ${server.name} (${server.ip})`)
-                          }
-                        >
-                          <TerminalIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Play song" arrow>
-                        <IconButton
-                          color="default"
-                          size="small"
-                          onClick={() =>
-                            alert(`Lecture de son sur ${server.name}`)
-                          }
-                        >
-                          <VolumeUpIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                  </TableCell>
+  <div className="flex justify-center gap-2">
+    <Tooltip title="Connexion SSH" arrow>
+      <span>
+        <IconButton
+          color="default"
+          size="small"
+          onClick={() =>
+            alert(`SSH vers ${server.name} (${server.ip})`)
+          }
+          disabled={server.status !== "online"} // désactiver si pas online
+        >
+          <TerminalIcon />
+        </IconButton>
+      </span>
+    </Tooltip>
+    <Tooltip title="Play song" arrow>
+      <span>
+        <IconButton
+          color="default"
+          size="small"
+          onClick={() =>
+            alert(`Lecture de son sur ${server.name}`)
+          }
+          disabled={server.status !== "online"} // désactiver si pas online
+        >
+          <VolumeUpIcon />
+        </IconButton>
+      </span>
+    </Tooltip>
+  </div>
+</TableCell>
                 </TableRow>
               ))
             ) : (

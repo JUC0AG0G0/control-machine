@@ -5,6 +5,7 @@ import { MachinesRepositoryImpl } from "../../infrastructure/database/repositori
 import { ListMachinesUseCase } from "../../application/machines/list-machines.usecase";
 import { MachinesController } from "./machines.controller";
 import { CreateMachineUseCase } from "src/application/machines/create-machine.usecase";
+import { MachineCheckService } from "../../infrastructure/cron/machine-check.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([MachinesOrmEntity])],
@@ -12,6 +13,7 @@ import { CreateMachineUseCase } from "src/application/machines/create-machine.us
   providers: [
     ListMachinesUseCase,
     CreateMachineUseCase,
+    MachineCheckService,
     {
       provide: 'MachinesRepository',
       useClass: MachinesRepositoryImpl,
