@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MachineCheckService } from './machine-check.service';
-import { MachineCronService } from './machine-cron.service';
+import { CronService } from './cron.service';
 import { MachinesOrmEntity } from '../database/orm-entities/machines.orm-entity';
 import { MachinesRepositoryImpl } from '../database/repositories/machines.repository.impl';
 import { MachinesRepository } from '../../domain/repositories/machines.repository';
@@ -11,7 +11,7 @@ import { MachinesRepository } from '../../domain/repositories/machines.repositor
   imports: [TypeOrmModule.forFeature([MachinesOrmEntity])],
   providers: [
     MachineCheckService,
-    MachineCronService,
+    CronService,
     {
       provide: 'MachinesRepository',
       useClass: MachinesRepositoryImpl,
@@ -19,4 +19,4 @@ import { MachinesRepository } from '../../domain/repositories/machines.repositor
   ],
   exports: [MachineCheckService],
 })
-export class MachineCronModule {}
+export class CronModule {}

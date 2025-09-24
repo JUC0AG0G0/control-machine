@@ -14,11 +14,11 @@ import { SoundsModule } from './modules/sounds/sounds.module';
 import { MachinesModule } from './modules/machines/machines.module';
 
 import { ScheduleModule } from '@nestjs/schedule';
-import { MachineCronModule } from './infrastructure/cron/machine-cron.module';
+import { CronModule } from './infrastructure/cron/cron.module';
 
 @Module({
   imports: [
-    MachineCronModule,
+    CronModule,
     PicturesModule,
     SoundsModule,
     MachinesModule,
