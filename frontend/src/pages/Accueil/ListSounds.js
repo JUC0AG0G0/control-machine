@@ -31,7 +31,7 @@ function ListSounds() {
   };
 
   const handleRowClick = (row) => {
-    const url = `http://0.0.0.0:3001/sounds/${row.id}`;
+    const url = `http://10.6.251.38:3001/sounds/${row.id}`;
     setSelected({ id: row.id, name: row.name, url, type: "audio" });
   };
 
@@ -93,7 +93,7 @@ function ListSounds() {
           data={sounds}
           onRowClick={handleRowClick}
           onDownload={(row) =>
-            downloadFile(`http://0.0.0.0:3001/sounds/${row.id}`, row.name)
+            downloadFile(`http://10.6.251.38:3001/sounds/${row.id}`, row.name)
           }
         />
       )}

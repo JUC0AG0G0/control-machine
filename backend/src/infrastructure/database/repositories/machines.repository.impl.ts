@@ -15,4 +15,18 @@ export class MachinesRepositoryImpl implements MachinesRepository {
   async findAll(): Promise<Machine[]> {
     return this.repository.find();
   }
+
+  async save(machine: Machine): Promise<Machine> {
+    const machineOrm = this.repository.create(machine);
+    const saved = await this.repository.save(machineOrm);
+    return new Machine(
+      saved.id,
+      saved.name,
+      saved.ip,
+      saved.username,
+      saved.password,
+      saved.status,
+      saved.last_seen,
+    );
+  }
 }
