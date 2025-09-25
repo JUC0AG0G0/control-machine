@@ -14,6 +14,7 @@ import { Javascript } from '../../domain/entities/javascript.entity';
 import type { Express, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadJavascriptUseCase } from 'src/application/javascript/upload-javascript.usecase';
+import { GetRandomJavascriptUseCase } from 'src/application/javascript/get-random-javascript.usecase';
 import type { MulterFile } from '../../infrastructure/types/multer-file.type';
 
 @Controller('javascript')
@@ -22,6 +23,7 @@ export class JavascriptController {
     private readonly listJavascriptUseCase: ListJavascriptUseCase,
     private readonly getJavascriptUseCase: GetJavascriptUseCase,
     private readonly uploadJavascriptUseCase: UploadJavascriptUseCase,
+    private readonly getRandomJavascriptUseCase: GetRandomJavascriptUseCase,
   ) { }
 
   @Get()
@@ -36,14 +38,22 @@ export class JavascriptController {
     }));
   }
 
+  @Get('random')
+  async getRandomFile(@Res() res: Response) {
+    const { fileStream, fileName } = await this.getRandomJavascriptUseCase.execute();
+
+    res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
+    fileStream.pipe(res);
+  }
+
   @Get(':id')
   async getFile(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     const { fileStream, fileName } = await this.getJavascriptUseCase.execute(id);
 
     res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
-
     fileStream.pipe(res);
   }
+
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))

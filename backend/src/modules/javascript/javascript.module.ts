@@ -7,6 +7,8 @@ import { JavascriptOrmEntity } from '../../infrastructure/database/orm-entities/
 import { MinioService } from 'src/infrastructure/storage/minio.service';
 import { GetJavascriptUseCase } from 'src/application/javascript/get-javascript.usecase';
 import { UploadJavascriptUseCase } from 'src/application/javascript/upload-javascript.usecase';
+import { GetRandomJavascriptUseCase } from '../../application/javascript/get-random-javascript.usecase';
+
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { UploadJavascriptUseCase } from 'src/application/javascript/upload-javas
     MinioService,
     GetJavascriptUseCase,
     UploadJavascriptUseCase,
+    GetRandomJavascriptUseCase,
     {
       provide: 'JavascriptRepository',
       useClass: JavascriptRepositoryImpl,
