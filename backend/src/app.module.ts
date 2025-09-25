@@ -14,6 +14,7 @@ import { SoundsModule } from './modules/sounds/sounds.module';
 import { JavascriptModule } from './modules/javascript/javascript.module';
 import { MachinesModule } from './modules/machines/machines.module';
 import { FilesModule } from "./modules/files/files.module";
+import { ApifilrougeModule } from './modules/apifilrouge/apifilrouge.module';
 
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronModule } from './infrastructure/cron/cron.module';
@@ -25,6 +26,7 @@ import { CronModule } from './infrastructure/cron/cron.module';
     SoundsModule,
     JavascriptModule,
     MachinesModule,
+    ApifilrougeModule,
     FilesModule,
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
