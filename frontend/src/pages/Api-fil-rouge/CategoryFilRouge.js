@@ -138,12 +138,10 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
   };
 
   const handleAddScriptToApi = () => {
-    console.log("Ajouter le script à l'api:", selectedScript);
     addScriptToApi(theme, selectedScript).then(() => refreshApis());
   };
 
   const handleAddPresetToApi = () => {
-    console.log("Ajouter les presets à l'api:", checkedPresets);
     addPresetsToApi(theme, checkedPresets).then(() => refreshApis());
   };
 
@@ -159,11 +157,13 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
         />
       </div>
 
-      <div className="col-span-8 space-y-4">
+      {/* ---- Colonne gauche ---- */}
+      <div className="col-span-12 lg:col-span-8 space-y-4">
+        {/* ---- Scripts ---- */}
         <div className="bg-white rounded-2xl shadow p-4">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
             <h2 className="text-lg font-semibold">Sélectionner un script</h2>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button variant="outlined" onClick={goToListJavascript}>
                 Ajouter un script
               </Button>
@@ -176,9 +176,7 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
             </div>
           </div>
           <RadioGroup value={selectedScript} onChange={handleScriptChange}>
-            {/* 🔹 Random en premier */}
             <FormControlLabel value="" control={<Radio />} label="Random 🎲" />
-            {/* 🔹 Scripts récupérés */}
             {scripts.map((s) => (
               <FormControlLabel
                 key={s.id}
@@ -193,6 +191,7 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
               variant="contained"
               onClick={() => handleAddScriptToApi()}
               disabled={selectedScript === null || selectedScript === undefined}
+              fullWidth
             >
               Ajouter ce script
             </Button>
@@ -201,9 +200,9 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
 
         {/* ---- Presets ---- */}
         <div className="bg-white rounded-2xl shadow p-4">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
             <h2 className="text-lg font-semibold">Presets de données</h2>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant="outlined"
                 onClick={() => setOpenPresetModal(true)}
@@ -239,6 +238,7 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
               variant="contained"
               onClick={() => handleAddPresetToApi()}
               disabled={checkedPresets.length === 0}
+              fullWidth
             >
               Ajouter ce(s) preset(s)
             </Button>
@@ -246,12 +246,12 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
         </div>
       </div>
 
-      {/* ---- APIs ---- */}
-      <div className="col-span-4">
+      {/* ---- Colonne droite (APIs) ---- */}
+      <div className="col-span-12 lg:col-span-4">
         <div className="bg-white rounded-2xl shadow p-4 h-full flex flex-col">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
             <h3 className="text-md font-semibold">APIs ({theme})</h3>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button onClick={flushApis} variant="outlined">
                 Vider
               </Button>
@@ -266,30 +266,23 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
           <Tabs
             value={tabIndex}
             onChange={(e, v) => setTabIndex(v)}
-            orientation="vertical"
-            sx={{ borderRight: 1, borderColor: "divider" }}
+            orientation={window.innerWidth < 640 ? "horizontal" : "vertical"}
+            variant="scrollable"
+            sx={{ borderRight: { sm: 1 }, borderColor: "divider" }}
           >
             <Tab label={`API 1: ${api1 || "(vide)"}`} />
             <Tab label={`API 2: ${api2 || "(vide)"}`} />
           </Tabs>
           <div className="mt-2 overflow-auto grow">
-            {tabIndex === 0 && (
-              <div>
-                {api1Data && (
-                  <pre className="whitespace-pre-wrap text-sm">
-                    {JSON.stringify(api1Data, null, 2)}
-                  </pre>
-                )}
-              </div>
+            {tabIndex === 0 && api1Data && (
+              <pre className="whitespace-pre-wrap text-sm">
+                {JSON.stringify(api1Data, null, 2)}
+              </pre>
             )}
-            {tabIndex === 1 && (
-              <div>
-                {api2Data && (
-                  <pre className="whitespace-pre-wrap text-sm">
-                    {JSON.stringify(api2Data, null, 2)}
-                  </pre>
-                )}
-              </div>
+            {tabIndex === 1 && api2Data && (
+              <pre className="whitespace-pre-wrap text-sm">
+                {JSON.stringify(api2Data, null, 2)}
+              </pre>
             )}
           </div>
         </div>
