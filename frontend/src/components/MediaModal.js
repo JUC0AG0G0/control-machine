@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,9 +9,28 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DownloadIcon from "@mui/icons-material/Download";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 
-function MediaModal({ open, onClose, title, url, type, onDownload, onCopyLink }) {
+function MediaModal({
+  open,
+  onClose,
+  title,
+  url,
+  type,
+  onDownload,
+  onCopyLink,
+}) {
+  const [scriptContent, setScriptContent] = useState("");
+
+  useEffect(() => {
+    if (url && type === "script") {
+      fetch(url)
+        .then((res) => res.text())
+        .then((data) => setScriptContent(data))
+        .catch((err) => console.error("Erreur de chargement du script:", err));
+    }
+  }, [url, type]);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <div className="flex items-center justify-between">
@@ -35,11 +55,13 @@ function MediaModal({ open, onClose, title, url, type, onDownload, onCopyLink })
           </audio>
         )}
         {type === "script" && (
-          <p>
-            <code>
-              {{url}}
-            </code>
-          </p>
+          <pre className="bg-gray-100 p-4 rounded-lg w-full max-h-[70vh] overflow-auto text-sm">
+            {url ? (
+              <code>{scriptContent}</code>
+            ) : (
+              <span>Aucun script à afficher.</span>
+            )}
+          </pre>
         )}
       </DialogContent>
 
