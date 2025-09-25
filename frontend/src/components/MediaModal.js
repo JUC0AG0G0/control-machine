@@ -34,6 +34,13 @@ function MediaModal({ open, onClose, title, url, type, onDownload, onCopyLink })
             Votre navigateur ne supporte pas la lecture audio.
           </audio>
         )}
+        {type === "script" && (
+          <p>
+            <code>
+              {{url}}
+            </code>
+          </p>
+        )}
       </DialogContent>
 
       <DialogActions>

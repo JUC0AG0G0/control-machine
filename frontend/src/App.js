@@ -97,8 +97,6 @@ function App() {
                 <Route path="/api-fil-rouge/arbres" element={<CategoryFilRouge theme="arbres" api1="types" api2="especes" />} />
                 <Route path="/api-fil-rouge/livres" element={<CategoryFilRouge theme="livres" api1="auteurs" api2="livres" />} />
 
-
-
                 {/* Module background */}
                 <Route path="/background" element={<Background />} />
                 
