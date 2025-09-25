@@ -1,8 +1,7 @@
-// infrastructure/database/repositories/javascript.repository.impl.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { JavascriptRepository } from '../../../domain/repositories/javascript.repository';
+import type { JavascriptRepository } from '../../../domain/repositories/javascript.repository';
 import { Javascript } from '../../../domain/entities/javascript.entity';
 import { JavascriptOrmEntity } from '../orm-entities/javascript.orm-entity';
 
@@ -10,27 +9,36 @@ import { JavascriptOrmEntity } from '../orm-entities/javascript.orm-entity';
 export class JavascriptRepositoryImpl implements JavascriptRepository {
   constructor(
     @InjectRepository(JavascriptOrmEntity)
-    private readonly repo: Repository<JavascriptOrmEntity>,
+    private readonly ormRepository: Repository<JavascriptOrmEntity>,
   ) {}
 
   async findAll(): Promise<Javascript[]> {
-    const scripts = await this.repo.find();
-    return scripts.map(s => new Javascript(s.id, s.name, s.path, s.updated_at));
+    const javascriptOrm = await this.ormRepository.find();
+    return javascriptOrm.map(
+      (p) => new Javascript(p.id!, p.name, p.path, p.updated_at),
+    );
   }
 
   async findById(id: number): Promise<Javascript | null> {
-    const s = await this.repo.findOneBy({ id });
-    return s ? new Javascript(s.id, s.name, s.path, s.updated_at) : null;
+    const javascriptOrm = await this.ormRepository.findOne({ where: { id } });
+    if (!javascriptOrm) return null;
+    return new Javascript(
+      javascriptOrm.id!,
+      javascriptOrm.name,
+      javascriptOrm.path,
+      javascriptOrm.updated_at,
+    );
   }
 
-  async save(js: Javascript): Promise<Javascript> {
-    const entity = this.repo.create({
-      id: js.id,
-      name: js.name,
-      path: js.path,
-      updated_at: js.updatedAt,
+  async save(javascript: Javascript): Promise<Javascript> {
+    const entity = this.ormRepository.create({
+      name: javascript.name,
+      path: javascript.path,
+      updated_at: javascript.updated_at,
     });
-    const saved = await this.repo.save(entity);
-    return new Javascript(saved.id, saved.name, saved.path, saved.updated_at);
+
+    const saved = await this.ormRepository.save(entity);
+
+    return new Javascript(saved.id!, saved.name, saved.path, saved.updated_at);
   }
 }

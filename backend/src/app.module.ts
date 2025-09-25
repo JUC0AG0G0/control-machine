@@ -11,6 +11,7 @@ import { JavascriptOrmEntity } from './infrastructure/database/orm-entities/java
 
 import { PicturesModule } from './modules/pictures/pictures.module';
 import { SoundsModule } from './modules/sounds/sounds.module';
+import { JavascriptModule } from './modules/javascript/javascript.module';
 import { MachinesModule } from './modules/machines/machines.module';
 import { FilesModule } from "./modules/files/files.module";
 
@@ -22,6 +23,7 @@ import { CronModule } from './infrastructure/cron/cron.module';
     CronModule,
     PicturesModule,
     SoundsModule,
+    JavascriptModule,
     MachinesModule,
     FilesModule,
     ScheduleModule.forRoot(),
