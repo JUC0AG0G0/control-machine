@@ -9,7 +9,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { Category, Menu as MenuIcon } from "@mui/icons-material";
+import { Menu as MenuIcon } from "@mui/icons-material";
 import Sidebar from "./components/Sidebar";
 import Background from "./pages/Background";
 import Index from "./pages/Accueil/Accueil";

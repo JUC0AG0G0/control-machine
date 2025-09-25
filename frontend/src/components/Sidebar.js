@@ -20,7 +20,6 @@ import {
     ExpandMore,
     Close as CloseIcon,
 } from "@mui/icons-material";
-import { patch } from "@mui/system";
 
 const DRAWER_WIDTH = 280;
 
