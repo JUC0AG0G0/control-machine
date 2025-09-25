@@ -20,6 +20,7 @@ import {
     ExpandMore,
     Close as CloseIcon,
 } from "@mui/icons-material";
+import { patch } from "@mui/system";
 
 const DRAWER_WIDTH = 280;
 
@@ -45,6 +46,26 @@ function Sidebar({ isOpen, toggleSidebar, isMobile }) {
                 { title: "Liste des sons", path: "/list-sounds" },
                 { title: "Liste des images", path: "/list-pictures" },
                 { title: "Liste des scripts javascript", path: "/list-javascript" },
+            ],
+        },
+        {
+            key: "Api-fil-rouge",
+            title: "API Fil Rouge",
+            path: "/api-fil-rouge",
+            icon: <CodeIcon />,
+            children: [
+                { title: "Pokemon", path: "/api-fil-rouge/pokemon" },
+                { title: "Miyazaki", path: "/api-fil-rouge/miyazaki" },
+                { title: "Music", path: "/api-fil-rouge/music" },
+                { title: "Ocean", path: "/api-fil-rouge/ocean" },
+                { title: "Shop", path: "/api-fil-rouge/shop" },
+                { title: "BasketBall", path: "/api-fil-rouge/basketball" },
+                { title: "UHA40", path: "/api-fil-rouge/uha40" },
+                { title: "BrowseShop", path: "/api-fil-rouge/browseshop" },
+                { title: "UNIX", path: "/api-fil-rouge/unix" },
+                { title: "Constructeurs", path: "/api-fil-rouge/constructeurs" },
+                { title: "Arbres", path: "/api-fil-rouge/arbres" },
+                { title: "Livres", path: "/api-fil-rouge/livres" },
             ],
         },
         {

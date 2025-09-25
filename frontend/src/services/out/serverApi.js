@@ -85,3 +85,61 @@ export async function getJavascript() {
 }
 
 // Create a new script javascript
+export async function createJavascript(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(API_URL + "/javascript", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok)
+    throw new Error("Erreur lors de l'upload du script javascript");
+  return response.json();
+}
+
+/////////////////////////////////////////////////////////////////
+//                    Gestion des APIs
+/////////////////////////////////////////////////////////////////
+
+// Get uha apis
+export async function getUhaApis(theme, api) {
+  const response = await fetch(`https://filrouge.uha4point0.fr/V2/${theme}/${api}`);
+  if (!response.ok) throw new Error("Erreur lors du fetch des serveurs");
+  return response.json();
+}
+
+// Reset uha apis
+export async function resetUhaApis(theme) {
+  const response = await fetch(`https://filrouge.uha4point0.fr/V2/reset/${theme}?`);
+  if (!response.ok) throw new Error("Erreur lors du fetch des serveurs");
+  return;
+}
+
+// Flush uha apis
+export async function flushUhaApis(theme) {
+  const response = await fetch(`https://filrouge.uha4point0.fr/V2/delete/${theme}?`);
+  if (!response.ok) throw new Error("Erreur lors du fetch des serveurs");
+  return;
+}
+
+
+// Add script to uha api
+export async function addScriptToApi(theme, scriptId) {
+  const response = await fetch("https://filrouge.uha4point0.fr/V2/addscript/" + theme + "?scriptId=" + scriptId, {
+    method: "POST",
+  });
+  if (!response.ok) throw new Error("Erreur lors du fetch des serveurs");
+  return;
+}
+
+// Add presets to uha api
+export async function addPresetsToApi(theme, presetIds) {
+  const idsParam = presetIds.map(id => "presetIds=" + id).join("&");
+  const response = await fetch("https://filrouge.uha4point0.fr/V2/addpresets/" + theme + "?" + idsParam, {
+    method: "POST",
+  });
+  if (!response.ok) throw new Error("Erreur lors du fetch des serveurs");
+  return;
+}
