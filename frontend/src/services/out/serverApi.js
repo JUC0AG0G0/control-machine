@@ -124,22 +124,32 @@ export async function flushUhaApis(theme) {
   return;
 }
 
-
 // Add script to uha api
 export async function addScriptToApi(theme, scriptId) {
-  const response = await fetch("https://filrouge.uha4point0.fr/V2/addscript/" + theme + "?scriptId=" + scriptId, {
-    method: "POST",
+  const body = JSON.stringify({
+    id: scriptId && scriptId.length > 0 ? scriptId : "random",
   });
-  if (!response.ok) throw new Error("Erreur lors du fetch des serveurs");
-  return;
+
+  const response = await fetch(API_URL + "/apifilrouge/addscripttoapi/" + theme, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body,
+  });
+
+  if (!response.ok) throw new Error("Erreur lors de l'ajout du script à l'API");
+  return response.json();
 }
 
 // Add presets to uha api
 export async function addPresetsToApi(theme, presetIds) {
-  const idsParam = presetIds.map(id => "presetIds=" + id).join("&");
-  const response = await fetch("https://filrouge.uha4point0.fr/V2/addpresets/" + theme + "?" + idsParam, {
+  const body = JSON.stringify({ ids: presetIds });
+
+  const response = await fetch(API_URL + "/apifilrouge/addpresetstoapi/" + theme, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body,
   });
-  if (!response.ok) throw new Error("Erreur lors du fetch des serveurs");
-  return;
+
+  if (!response.ok) throw new Error("Erreur lors de l'ajout des presets à l'API");
+  return response.json();
 }

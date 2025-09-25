@@ -26,11 +26,7 @@ import {
 export default function CategoryFilRouge({ theme, api1, api2 }) {
   const navigate = useNavigate();
 
-  const [scripts, setScripts] = useState([
-    { id: "1", name: "Script 1" },
-    { id: "2", name: "Script 2" },
-    { id: "3", name: "Script 3" },
-  ]);
+  const [scripts, setScripts] = useState([]);
   const [selectedScript, setSelectedScript] = useState(() => {
     const saved = selectionService.getSelected();
     return saved && saved.length ? saved[0] : "";
@@ -83,6 +79,18 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
   };
 
   useEffect(() => {
+    async function fetchScripts() {
+      try {
+        const data = await getJavascript();
+        setScripts(data);
+      } catch (err) {
+        console.error("Erreur lors du fetch des scripts:", err);
+      }
+    }
+    fetchScripts();
+  }, []);
+
+  useEffect(() => {
     try {
       const saved = localStorage.getItem(presetsStorageKey);
       setCheckedPresets(saved ? JSON.parse(saved) : []);
@@ -109,7 +117,7 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
     const id = e.target.value;
     setSelectedScript(id);
     selectionService.clear();
-    selectionService.toggle(id);
+    if (id) selectionService.toggle(id);
   };
 
   const handleTogglePreset = (id) => {
@@ -130,13 +138,11 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
   };
 
   const handleAddScriptToApi = () => {
-    // requette pour envoyer l'id du script sélectionné
     console.log("Ajouter le script à l'api:", selectedScript);
     addScriptToApi(theme, selectedScript).then(() => refreshApis());
   };
 
   const handleAddPresetToApi = () => {
-    // requette pour envoyer la liste des id des presets cochés
     console.log("Ajouter les presets à l'api:", checkedPresets);
     addPresetsToApi(theme, checkedPresets).then(() => refreshApis());
   };
@@ -163,13 +169,16 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
               </Button>
               <Button
                 variant="contained"
-                onClick={() => setScripts([...scripts])}
+                onClick={() => getJavascript().then(setScripts)}
               >
                 Rafraîchir
               </Button>
             </div>
           </div>
           <RadioGroup value={selectedScript} onChange={handleScriptChange}>
+            {/* 🔹 Random en premier */}
+            <FormControlLabel value="" control={<Radio />} label="Random 🎲" />
+            {/* 🔹 Scripts récupérés */}
             {scripts.map((s) => (
               <FormControlLabel
                 key={s.id}
@@ -180,12 +189,17 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
             ))}
           </RadioGroup>
           <div className="mt-3">
-            <Button variant="contained" onClick={() => handleAddScriptToApi()}>
+            <Button
+              variant="contained"
+              onClick={() => handleAddScriptToApi()}
+              disabled={selectedScript === null || selectedScript === undefined}
+            >
               Ajouter ce script
             </Button>
           </div>
         </div>
 
+        {/* ---- Presets ---- */}
         <div className="bg-white rounded-2xl shadow p-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-lg font-semibold">Presets de données</h2>
@@ -221,13 +235,18 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
             ))}
           </div>
           <div className="mt-3">
-            <Button variant="contained" onClick={() => handleAddPresetToApi()}>
+            <Button
+              variant="contained"
+              onClick={() => handleAddPresetToApi()}
+              disabled={checkedPresets.length === 0}
+            >
               Ajouter ce(s) preset(s)
             </Button>
           </div>
         </div>
       </div>
 
+      {/* ---- APIs ---- */}
       <div className="col-span-4">
         <div className="bg-white rounded-2xl shadow p-4 h-full flex flex-col">
           <div className="flex items-center justify-between mb-2">
@@ -276,6 +295,7 @@ export default function CategoryFilRouge({ theme, api1, api2 }) {
         </div>
       </div>
 
+      {/* ---- Modal ajout preset ---- */}
       <Dialog open={openPresetModal} onClose={() => setOpenPresetModal(false)}>
         <DialogTitle>Ajouter un preset</DialogTitle>
         <DialogContent>
